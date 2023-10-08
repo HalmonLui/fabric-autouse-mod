@@ -50,7 +50,6 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         } else if (this.experienceLevel >= 50 && notUsedYet) {
             notUsedYet = false;
             useItem(robot);
-            doKeyPress(robot);
         }
     }
 
@@ -90,6 +89,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                 this.sendMessage(Text.of("Item used"));
                 shouldUseItem = false;
                 notUsedYet = true;
+                doKeyPress(robot);
             }
         });
     }
@@ -106,7 +106,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                 // Reset key to 1 after 20 ticks
                 robot.keyPress(KeyEvent.VK_1);  // set to hotbar 2 key which should be the item. TODO: Make this customizable or automatic
                 robot.keyRelease(KeyEvent.VK_1);
-                shouldKeyPress = true;
+                shouldKeyPress = false;
             }
         });
     }
