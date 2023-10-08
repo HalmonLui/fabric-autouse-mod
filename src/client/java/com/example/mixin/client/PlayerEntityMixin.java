@@ -27,6 +27,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     private int delayTimer = 0;  // timer used for waiting ticks
     private int respawnDelayTimer = 0; // timer for respawn
     private int useItemDelayTimer = 0; // timer for useItem
+    private int keyPressDelayTimer = 0; // timer for doKeyPress
     private boolean shouldCallHome = false;
     private boolean shouldUseItem = false;
     private boolean shouldRespawn = false;
@@ -95,14 +96,14 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     private void doKeyPress(Robot robot) {
         shouldKeyPress = true;
-        delayTimer = 20;  // 20 ticks
+        keyPressDelayTimer = 20;  // 20 ticks
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             // Handle the delay
-            if (shouldKeyPress && delayTimer > 0) {
-                delayTimer--;
+            if (shouldKeyPress && keyPressDelayTimer > 0) {
+                keyPressDelayTimer--;
             } else if (shouldKeyPress) {
-                // Reset key to 1 after 100 ticks
+                // Reset key to 1 after 20 ticks
                 robot.keyPress(KeyEvent.VK_1);  // set to hotbar 2 key which should be the item. TODO: Make this customizable or automatic
                 robot.keyRelease(KeyEvent.VK_1);
                 shouldKeyPress = true;
