@@ -11,20 +11,20 @@ import org.lwjgl.glfw.GLFW;
 public class ExampleModClient implements ClientModInitializer {
 	private static ExampleModClient instance;
 
-	public static KeyBinding TestBind;
+	public static KeyBinding autoUseBind;
 	@Override
 	public void onInitializeClient() {
 		if (instance == null) instance = this;
 
-		TestBind = KeyBindingHelper.registerKeyBinding(new KeyBinding("testBindKey", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, "Test"));
+		autoUseBind = KeyBindingHelper.registerKeyBinding(new KeyBinding("autoUseKey", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, "AutoUse"));
 
 		//Register Tick Callback
 		ClientTickEvents.END_CLIENT_TICK.register(this::tick);
 	}
 
 	public void tick(MinecraftClient client) {
-		if (TestBind.wasPressed()) {
-			System.out.println("Hola Mundo");
+		if (autoUseBind.wasPressed()) {
+//			System.out.println("Hola Mundo");
 		}
 	}
 }

@@ -1,6 +1,6 @@
 {
 	"schemaVersion": 1,
-	"id": "autouseMod",
+	"id": "autouse",
 	"version": "${version}",
 	"name": "AutoUse Mod",
 	"description": "Automates using an item in slot 2 upon reaching level 50. Automates respawning and going home",
