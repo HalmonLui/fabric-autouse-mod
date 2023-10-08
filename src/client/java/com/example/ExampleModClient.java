@@ -15,20 +15,16 @@ public class ExampleModClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		if (instance == null) instance = this;
-		System.out.println("AJSKLDJKASLJDKLS INSIDE INITIALIZED CLIENT EYYO");
 
-
-		TestBind = KeyBindingHelper.registerKeyBinding(new KeyBinding("testBindKeySugma", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, "LIGMA"));
+		TestBind = KeyBindingHelper.registerKeyBinding(new KeyBinding("testBindKey", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, "Test"));
 
 		//Register Tick Callback
 		ClientTickEvents.END_CLIENT_TICK.register(this::tick);
-
-
 	}
 
 	public void tick(MinecraftClient client) {
 		if (TestBind.wasPressed()) {
-			System.out.println("JAJAJAJAJAJAJA SOOOOGIMA BAAALZ");
+			System.out.println("Hola Mundo");
 		}
 	}
 }

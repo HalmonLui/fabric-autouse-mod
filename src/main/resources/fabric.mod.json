@@ -1,15 +1,14 @@
 {
 	"schemaVersion": 1,
-	"id": "modid",
+	"id": "autouseMod",
 	"version": "${version}",
-	"name": "Example mod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "AutoUse Mod",
+	"description": "Automates using an item in slot 2 upon reaching level 50. Automates respawning and going home",
 	"authors": [
-		"Me!"
+		"halmon"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/HalmonLui/fabric-autouse-mod/"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/modid/icon.png",
