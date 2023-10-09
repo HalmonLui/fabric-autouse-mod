@@ -24,10 +24,11 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Shadow public abstract boolean isPlayer();
     @Shadow public abstract void requestRespawn();
     @Shadow public int experienceLevel;
-    private int delayTimer = 0;  // timer used for waiting ticks
-    private int respawnDelayTimer = 0; // timer for respawn
-    private int useItemDelayTimer = 0; // timer for useItem
-    private int keyPressDelayTimer = 0; // timer for doKeyPress
+    private int delayTimer = 100;  // timer used for waiting ticks
+    private int respawnDelayTimer = 100; // timer for respawn
+    private int useItemDelayTimer = 100; // timer for useItem
+    private int keyPressDelayTimer = 40; // timer for doKeyPress
+    private int tickDelayTimer = 100; // timer for tick
     private boolean shouldCallHome = false;
     private boolean shouldUseItem = false;
     private boolean shouldRespawn = false;
@@ -43,87 +44,66 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     private void tick(CallbackInfo info) throws AWTException {
         System.setProperty("java.awt.headless", "false");
         Robot robot = new Robot();
+
         if (this.isDead()) {
-             if (this.isPlayer()) {
-                 doRequestRespawn();
+            doRequestRespawn();
+        } else if (tickDelayTimer > 0) {
+            tickDelayTimer--;
+        } else {
+            if (this.experienceLevel >= 50 && notUsedYet) {
+                notUsedYet = false;
+                useItem(robot);
             }
-        } else if (this.experienceLevel >= 50 && notUsedYet) {
-            notUsedYet = false;
-            useItem(robot);
+            tickDelayTimer = 100;
         }
     }
 
     private void doRequestRespawn() {
         shouldRespawn = true;
-        respawnDelayTimer = 100;  // 100 ticks
-
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             // Handle the delay
-            if (shouldRespawn && respawnDelayTimer > 0) {
+            if (shouldRespawn && respawnDelayTimer > 0 && respawnDelayTimer != 40) {
                 respawnDelayTimer--;
-            } else if (shouldRespawn) {
+            } else if (shouldRespawn && respawnDelayTimer == 40) {
                 this.sendMessage(Text.of("You died, requesting respawn"));
                 // Send the respawn request after 100 ticks
                 this.requestRespawn();
-                sendHome();
+                respawnDelayTimer--;
+            }
+            else if (shouldRespawn) {
+                // Send the "/home" message after 100 ticks
+                this.sendMessage(Text.of("calling /home xp"));
+                MinecraftClient.getInstance().player.networkHandler.sendChatCommand("home xp"); // make sure you `/sethome xp` first. TODO: Make this field customizable.
                 shouldRespawn = false;
+                respawnDelayTimer = 100;  // 100 ticks
             }
         });
     }
 
     private void useItem(Robot robot) {
-        useItemDelayTimer = 100;  // 100 ticks
         shouldUseItem = true;
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             // Handle the delay
-            if (shouldUseItem && useItemDelayTimer > 0) {
+            if (shouldUseItem && useItemDelayTimer > 0 && useItemDelayTimer != 80 && useItemDelayTimer != 40) {
                 useItemDelayTimer--;
-            } else if (shouldUseItem) {
-                // Use item after 100 ticks
-                this.sendMessage(Text.of("You are level: " + this.experienceLevel + ". Using the item"));
+            } else if (shouldUseItem && useItemDelayTimer == 80) {
                 robot.keyPress(KeyEvent.VK_2);  // set to hotbar 2 key which should be the item. TODO: Make this customizable or automatic
                 robot.keyRelease(KeyEvent.VK_2);
+                useItemDelayTimer--;
+            } else if (shouldUseItem && useItemDelayTimer == 40) {
+                // Use item after 100 ticks
+                this.sendMessage(Text.of("You are level: " + this.experienceLevel + ". Using the item"));
                 robot.mousePress(InputEvent.BUTTON3_DOWN_MASK);
                 robot.mouseRelease(InputEvent.BUTTON3_DOWN_MASK);
+                useItemDelayTimer--;
+            } else if (shouldUseItem) {
                 this.sendMessage(Text.of("Item used"));
                 shouldUseItem = false;
                 notUsedYet = true;
-                doKeyPress(robot);
-            }
-        });
-    }
-
-    private void doKeyPress(Robot robot) {
-        shouldKeyPress = true;
-        keyPressDelayTimer = 20;  // 20 ticks
-
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            // Handle the delay
-            if (shouldKeyPress && keyPressDelayTimer > 0) {
-                keyPressDelayTimer--;
-            } else if (shouldKeyPress) {
-                // Reset key to 1 after 20 ticks
                 robot.keyPress(KeyEvent.VK_1);  // set to hotbar 2 key which should be the item. TODO: Make this customizable or automatic
                 robot.keyRelease(KeyEvent.VK_1);
-                shouldKeyPress = false;
-            }
-        });
-    }
-
-    private void sendHome() {
-        shouldCallHome = true;
-        delayTimer = 100;  // 100 ticks
-
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            // Handle the delay
-            if (shouldCallHome && delayTimer > 0) {
-                delayTimer--;
-            } else if (shouldCallHome) {
-                // Send the "/home" message after 100 ticks
-                this.sendMessage(Text.of("calling /home xp"));
-                MinecraftClient.getInstance().player.networkHandler.sendChatCommand("home xp"); // make sure you `/sethome xp` first. TODO: Make this field customizable.
-                shouldCallHome = false;
+                useItemDelayTimer = 100;  // 100 ticks
             }
         });
     }
