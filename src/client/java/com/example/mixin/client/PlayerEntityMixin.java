@@ -1,5 +1,6 @@
 package com.example.mixin.client;
 
+import com.example.ExampleModClient;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -32,18 +33,20 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tick(CallbackInfo info) {
-        player = MinecraftClient.getInstance().player;
+        if (ExampleModClient.isAutoUseOn()) {
+            player = MinecraftClient.getInstance().player;
 
-        if (player != null && player.isDead()) {
-            doRequestRespawn();
-        } else if (tickDelayTimer > 0) {
-            tickDelayTimer--;
-        } else {
-            if (player != null && player.experienceLevel >= 50 && notUsedYet) {
-                notUsedYet = false;
-                useItem();
+            if (player != null && player.isDead()) {
+                doRequestRespawn();
+            } else if (tickDelayTimer > 0) {
+                tickDelayTimer--;
+            } else {
+                if (player != null && player.experienceLevel >= 50 && notUsedYet) {
+                    notUsedYet = false;
+                    useItem();
+                }
+                tickDelayTimer = 100;
             }
-            tickDelayTimer = 100;
         }
     }
 
@@ -82,8 +85,6 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             } else if (shouldUseItem && useItemDelayTimer == 40) {
                 // Use item after 100 ticks
                 player.sendMessage(Text.of("You are level: " + player.experienceLevel + ". Using the item"));
-//                robot.mousePress(InputEvent.BUTTON3_DOWN_MASK);
-//                robot.mouseRelease(InputEvent.BUTTON3_DOWN_MASK);
                 ItemStack itemStack = player.getStackInHand(player.getActiveHand());
                 itemStack.use(player.getWorld(), player, player.getActiveHand());
 
