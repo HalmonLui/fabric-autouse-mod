@@ -1,14 +1,21 @@
 package com.example.mixin.client;
 
 import com.example.ExampleModClient;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
+import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.text.Text;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -84,9 +91,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                 useItemDelayTimer--;
             } else if (shouldUseItem && useItemDelayTimer == 40) {
                 // Use item after 100 ticks
-                player.sendMessage(Text.of("You are level: " + player.experienceLevel + ". Using the item"));
-                ItemStack itemStack = player.getStackInHand(player.getActiveHand());
-                itemStack.use(player.getWorld(), player, player.getActiveHand());
+                // TODO: find a way to send right click. Workaround currently is using the auto clicker mod to right click every 50ticks
+//                player.sendMessage(Text.of("You are level: " + player.experienceLevel + ". Using the item"));
+//                player.getInventory().getStack(1).use(player.getWorld(), player, Hand.MAIN_HAND);
 
                 useItemDelayTimer--;
             } else if (shouldUseItem) {
