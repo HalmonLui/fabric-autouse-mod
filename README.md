@@ -1,9 +1,19 @@
-# Fabric Example Mod
+# Autouse Mod
+***
+Autouse Mod is a mod for Minecraft using the Fabric mod loader.
+Fabric client side mod to automate tasks.
+***
+Autouse can be toggled using the `V` key. (this can be changed in the keybind settings)
+### Automations:
 
-## Setup
+- Once you reach x level, use an item
+- If you die, autorespawn and teleport home using /home 
+***
 
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
+### Development Setup
 
-## License
+To build the mod, use `./gradlew build`
+***
+### Supported Versions
 
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+1.20.1

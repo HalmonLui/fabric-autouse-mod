@@ -9,8 +9,8 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
-public class ExampleModClient implements ClientModInitializer {
-	private static ExampleModClient instance;
+public class AutoUseModClient implements ClientModInitializer {
+	private static AutoUseModClient instance;
 
 	public static KeyBinding autoUseBind;
 	private static boolean autoUseIsOn = false;

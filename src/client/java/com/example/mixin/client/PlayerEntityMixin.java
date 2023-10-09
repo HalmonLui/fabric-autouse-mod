@@ -1,6 +1,6 @@
 package com.example.mixin.client;
 
-import com.example.ExampleModClient;
+import com.example.AutoUseModClient;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
@@ -40,7 +40,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tick(CallbackInfo info) {
-        if (ExampleModClient.isAutoUseOn()) {
+        if (AutoUseModClient.isAutoUseOn()) {
             player = MinecraftClient.getInstance().player;
 
             if (player != null && player.isDead()) {
