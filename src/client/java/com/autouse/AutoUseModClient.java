@@ -1,4 +1,4 @@
-package com.example;
+package com.autouse;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
