@@ -74,6 +74,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                 player.sendMessage(Text.of("calling /home xp"));
                 player.networkHandler.sendChatCommand("home xp"); // make sure you `/sethome xp` first. TODO: Make this field customizable.
                 shouldRespawn = false;
+                player.getInventory().selectedSlot = 0; // reset to first hotbar slot after death so we aren't stuck on the 2nd slot
                 respawnDelayTimer = 100;  // 100 ticks
             }
         });
