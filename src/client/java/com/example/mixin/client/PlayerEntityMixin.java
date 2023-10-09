@@ -45,7 +45,11 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
             if (player != null && player.isDead()) {
                 doRequestRespawn();
-            } else if (tickDelayTimer > 0) {
+            } else if (tickDelayTimer % 99 == 0 && tickDelayTimer != 0) {
+                player.getInventory().selectedSlot = 0; // reset to first hotbar slot every once in a while so we aren't stuck on the 2nd slot;
+                tickDelayTimer--;
+            }
+            else if (tickDelayTimer > 0) {
                 tickDelayTimer--;
             } else {
                 if (player != null && player.experienceLevel >= 50 && notUsedYet) {
